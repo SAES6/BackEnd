@@ -3,9 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ChoiceController;
+use App\Http\Controllers\ResponseController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::apiResource('admin-users', AdminUserController::class);
+Route::apiResource('questionnaires', QuestionnaireController::class);
+Route::apiResource('questions', QuestionController::class);
+Route::apiResource('choices', ChoiceController::class);
+Route::apiResource('responses', ResponseController::class);
 
-Route::get('/users', [UserController::class, 'index']);
