@@ -13,6 +13,7 @@ class Questionnaire extends Model
 
     protected $fillable = [
         'name',
+        'deployed'
     ];
 
     public function questions()
