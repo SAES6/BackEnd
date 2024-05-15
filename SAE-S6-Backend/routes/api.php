@@ -11,6 +11,10 @@ use App\Http\Controllers\ResponseController;
 
 Route::apiResource('admin-users', AdminUserController::class);
 Route::apiResource('questionnaires', QuestionnaireController::class);
+
+// export des data 
+
+Route::get('admin/exportData', [AdminUserController::class,'exportData']);
 Route::apiResource('questions', QuestionController::class);
 Route::apiResource('choices', ChoiceController::class);
 Route::apiResource('responses', ResponseController::class);

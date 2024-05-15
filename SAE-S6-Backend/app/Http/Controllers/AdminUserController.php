@@ -4,7 +4,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminUser;
+use App\Models\Response;
 use Illuminate\Http\Request;
+use ReturnTypeWillChange;
 
 class AdminUserController extends Controller
 {
@@ -52,5 +54,10 @@ class AdminUserController extends Controller
         $adminUser->delete();
 
         return response()->json(null, 204);
+    }
+    
+
+    public function exportData(Request $request) {
+       return response()->json(Response::all());
     }
 }
