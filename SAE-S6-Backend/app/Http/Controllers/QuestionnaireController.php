@@ -18,6 +18,7 @@ class QuestionnaireController extends Controller
     {
         $request->validate([
             'name' => 'required',
+
         ]);
 
         $questionnaire = Questionnaire::create($request->all());
@@ -25,6 +26,16 @@ class QuestionnaireController extends Controller
         return response()->json($questionnaire, 201);
     }
 
+    public function launch(Request $request)
+    {
+        $request->validate([
+            'deployed' => 'required',
+        ]);
+        $questionnaire = Questionnaire::find($request->questionnaire_id);
+        $questionnaire->update(['deployed' => $request->deployed]);
+        return response()->json($questionnaire, 200);
+    }
+    
     public function show(Questionnaire $questionnaire)
     {
         return $questionnaire;
