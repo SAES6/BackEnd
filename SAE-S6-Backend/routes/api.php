@@ -25,3 +25,10 @@ Route::apiResource('questions', QuestionController::class);
 Route::apiResource('choices', ChoiceController::class);
 Route::apiResource('responses', ResponseController::class);
 
+
+// login logout 
+
+Route::post('login', [AdminUserController::class, 'login']);
+Route::middleware('auth:api')->get('me', [AdminUserController::class, 'me']);
+Route::middleware('auth:api')->post('logout', [AdminUserController::class, 'logout']);
+
