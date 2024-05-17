@@ -20,11 +20,13 @@ class ResponseTest extends TestCase
         $response = Response::factory()->create([
             'question_id' => $question->id,
             'choice_id' => $choice->id,
+            'user_token' => 'token',
         ]);
 
         $this->assertDatabaseHas('responses', [
             'question_id' => $response->question_id,
             'choice_id' => $response->choice_id,
+            'user_token' => $response->user_token,
         ]);
     }
 

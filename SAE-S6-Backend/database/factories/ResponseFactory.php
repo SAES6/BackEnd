@@ -19,6 +19,7 @@ class ResponseFactory extends Factory
             'response_text' => $this->faker->optional()->text,
             'choice_id' => $this->faker->optional()->randomElement([Choice::factory()]),
             'slider_value' => $this->faker->optional()->numberBetween(1, 10),
+            'user_token' => $this->faker->uuid,
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -17,6 +17,7 @@ class ChoiceFactory extends Factory
         return [
             'question_id' => Question::factory(),
             'text' => $this->faker->sentence,
+            'image_src' => $this->faker->imageUrl(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
