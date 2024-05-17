@@ -16,6 +16,7 @@ class QuestionnaireFactory extends Factory
         return [
             'name' => $this->faker->sentence,
             'deployed' => $this->faker->boolean,
+            'duree' => $this->faker->numberBetween(1, 60),
             'created_at' => now(),
             'updated_at' => now(),
         ];

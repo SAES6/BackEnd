@@ -19,6 +19,7 @@ class QuestionnaireTest extends TestCase
         $this->assertDatabaseHas('questionnaires', [
             'name' => $questionnaire->name,
             'deployed' => $questionnaire->deployed,
+            'duree' => $questionnaire->duree,
         ]);
     }
 
@@ -26,20 +27,18 @@ class QuestionnaireTest extends TestCase
     {
         $questionnaire = Questionnaire::factory()->create();
         // test la route qeustionnaire/launch put avec en payload l'id du questionnaire et deployed = true
-        $this->put('/questionnaire/launch', ['id' => $questionnaire->id, 'deployed' => true]);
+        $this->put('/questionnaire/launch', ['id' => $questionnaire->id, 'deployed' => true, 'duree' => $questionnaire->duree]);
         $this->assertDatabaseHas('questionnaires', [
             'id' => $questionnaire->id,
             'deployed' => true,
+            'duree' => $questionnaire->duree,
         ]);
     }
 
     public function test_update_questionnaire()
     {
         $questionnaire = Questionnaire::factory()->create();
-        $questionnaire->update(['name' => 'new_name']);
-        $questionnaire->update(['deployed' => true]);
-        
-
+        $questionnaire->update(['name' => 'new_name'], ['deployed' => true], ['duree' => 10]);
         $this->assertDatabaseHas('questionnaires', [
             'name' => 'new_name',
             'deployed' => true,
