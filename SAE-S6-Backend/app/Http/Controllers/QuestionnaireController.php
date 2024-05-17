@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use App\Models\Response;
-
+use App\Models\Question;
 class QuestionnaireController extends Controller
 {
     public function index()
@@ -39,7 +39,14 @@ class QuestionnaireController extends Controller
     
     public function show(Questionnaire $questionnaire)
     {
-        return $questionnaire;
+        return $questionnaire->with('questions');
+    }
+
+
+    public function loadById(Request $request)
+    {
+        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->get();
+        return response()->json($questions, 200);
     }
 
     public function update(Request $request, Questionnaire $questionnaire)
