@@ -16,8 +16,7 @@ class ChoiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'question_id' => 'required|exists:questions,id',
-            'text' => 'required',
+            'question_id' => 'required|exists:questions,id',         
         ]);
 
         $choice = Choice::create($request->all());
@@ -32,10 +31,6 @@ class ChoiceController extends Controller
 
     public function update(Request $request, Choice $choice)
     {
-        $request->validate([
-            'text' => 'required',
-        ]);
-
         $choice->update($request->all());
 
         return response()->json($choice, 200);

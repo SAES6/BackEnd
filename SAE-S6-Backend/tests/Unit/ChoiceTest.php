@@ -19,6 +19,7 @@ class ChoiceTest extends TestCase
 
         $this->assertDatabaseHas('choices', [
             'text' => $choice->text,
+            'image_src' => $choice->image_src,
             'question_id' => $question->id,
         ]);
     }
@@ -27,9 +28,11 @@ class ChoiceTest extends TestCase
     {
         $choice = Choice::factory()->create();
         $choice->update(['text' => 'new_text']);
+        $choice->update(['image_src' => 'new_image_src']);
 
         $this->assertDatabaseHas('choices', [
             'text' => 'new_text',
+            'image_src' => 'new_image_src',
         ]);
     }
 

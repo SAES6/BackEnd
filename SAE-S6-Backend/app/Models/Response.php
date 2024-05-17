@@ -12,7 +12,7 @@ class Response extends Model
     use HasFactory;
 
     protected $fillable = [
-        'question_id', 'response_text', 'choice_id', 'slider_value',
+        'question_id', 'response_text', 'choice_id', 'slider_value', 'user_token'
     ];
 
     public function question()
