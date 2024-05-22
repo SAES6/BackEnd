@@ -39,3 +39,5 @@ Route::get('createToken', [TokenController::class, 'createToken']);
 
 // get questionnaires by user token
 Route::get('questionnaire/byToken', [QuestionnaireController::class, 'getQuestionnaireByToken']);
+
+Route::get('questionnaire/loadById', [QuestionnaireController::class, 'loadById']);
