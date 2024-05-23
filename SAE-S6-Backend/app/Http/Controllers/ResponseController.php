@@ -20,6 +20,7 @@ class ResponseController extends Controller
             'response_text' => 'nullable|string',
             'choice_id' => 'nullable|exists:choices,id',
             'slider_value' => 'nullable|integer',
+            'role' => 'required|string',
         ]);
 
         $response = Response::create($request->all());
@@ -38,6 +39,7 @@ class ResponseController extends Controller
             'response_text' => 'nullable|string',
             'choice_id' => 'nullable|exists:choices,id',
             'slider_value' => 'nullable|integer',
+            'role' => 'required|string',
         ]);
 
         $response->update($request->all());

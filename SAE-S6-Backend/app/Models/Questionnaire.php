@@ -13,11 +13,13 @@ class Questionnaire extends Model
 
     protected $fillable = [
         'name',
-        'deployed'
+        'deployed',
+        'duree',
+        'description'
     ];
 
     public function questions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class)->with('choices');
     }
 }

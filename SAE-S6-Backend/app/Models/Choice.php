@@ -11,7 +11,7 @@ class Choice extends Model
     use HasFactory;
 
     protected $fillable = [
-        'question_id', 'text',
+        'question_id', 'text', 'image_src'
     ];
 
     public function question()

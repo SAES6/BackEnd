@@ -6,7 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
-
+use App\Models\Response;
+use App\Models\Question;
 class QuestionnaireController extends Controller
 {
     public function index()
@@ -38,7 +39,14 @@ class QuestionnaireController extends Controller
     
     public function show(Questionnaire $questionnaire)
     {
-        return $questionnaire;
+        return $questionnaire->with('questions');
+    }
+
+
+    public function loadById(Request $request)
+    {
+        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->get();
+        return response()->json($questions, 200);
     }
 
     public function update(Request $request, Questionnaire $questionnaire)
@@ -57,5 +65,32 @@ class QuestionnaireController extends Controller
         $questionnaire->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function getQuestionnaireByToken(Request $request)
+    {
+        $questionnaire = Questionnaire::all();
+        $token = $request->token;
+        foreach ($questionnaire as $q) {
+
+            $questions = $q->questions;
+            $q['number_of_questions'] = count($questions);
+            foreach ($questions as $question) {
+                $reponses = Response::where('question_id', $question->id)->get();
+                foreach ($reponses as $reponse) {
+                    if ($reponse->user_token == $token) {
+                        $q['completed'] = true;
+                    }
+                }
+            }
+            if($q['completed'] == null){
+                $q['completed'] = false;
+            }
+
+        }
+        if($questionnaire->isEmpty()){
+            return response()->json(['message' => 'No questionnaire found'], 404);
+        }
+        return response()->json($questionnaire, 200);
     }
 }

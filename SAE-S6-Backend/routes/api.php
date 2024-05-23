@@ -8,6 +8,7 @@ use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ChoiceController;
 use App\Http\Controllers\ResponseController;
+use App\Http\Controllers\TokenController;
 
 Route::apiResource('admin-users', AdminUserController::class);
 
@@ -25,3 +26,18 @@ Route::apiResource('questions', QuestionController::class);
 Route::apiResource('choices', ChoiceController::class);
 Route::apiResource('responses', ResponseController::class);
 
+
+// login logout 
+
+Route::post('login', [AdminUserController::class, 'login']);
+Route::middleware('auth:api')->get('me', [AdminUserController::class, 'me']);
+Route::middleware('auth:api')->post('logout', [AdminUserController::class, 'logout']);
+
+// Token
+
+Route::get('createToken', [TokenController::class, 'createToken']);
+
+// get questionnaires by user token
+Route::get('questionnaire/byToken', [QuestionnaireController::class, 'getQuestionnaireByToken']);
+
+Route::get('questionnaire/loadById', [QuestionnaireController::class, 'loadById']);
