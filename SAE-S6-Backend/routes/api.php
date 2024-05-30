@@ -19,6 +19,14 @@ Route::apiResource('questionnaires', QuestionnaireController::class);
 
 Route::get('admin/exportData', [AdminUserController::class,'exportData']);
 
+Route::get('admins/list', [AdminUserController::class,'getAdminDetails']);
+
+Route::put('admin/updateUsername', [AdminUserController::class,'updateUsername']);
+Route::put('admin/updatePassword', [AdminUserController::class,'updatePassword']);
+Route::put('admin/updateEmail', [AdminUserController::class,'updateEmail']);
+Route::post('admin/add', [AdminUserController::class,'createAdmin']);
+Route::delete('admin/delete', [AdminUserController::class,'deleteAdmin']);
+
 // launch a questionnaire
 Route::put('questionnaires/launch', [QuestionnaireController::class, 'launch']);
 

@@ -12,7 +12,7 @@ class AdminUser extends Authenticatable implements JWTSubject
     use HasFactory;
 
     protected $fillable = [
-        'email', 'password', 'username',
+        'email', 'password', 'username', 'principal'
     ];
 
     protected $hidden = [
