@@ -94,9 +94,9 @@ class QuestionnaireController extends Controller
         return response()->json($questionnaire, 200);
     }
 
-    public function loadQuestionnairesAndSections()
+    public function loadQuestionnairesAndSections(Request $request)
     {
-        if(auth()->user()->id){
+        if(auth()->user()){
             $questionnaires = Questionnaire::with('sections')->get();
             return response()->json($questionnaires, 200);
         }

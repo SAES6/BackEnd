@@ -59,7 +59,7 @@ class QuestionController extends Controller
 
     public function loadQestionsBySection(Request $request)
     {
-        if(auth()->user()->id){
+        if(auth()->user()){
             $section_id = $request->section_id;
             $questions = Question::where('section_id', $section_id)->with('choices')->get();
             return response()->json($questions, 200);

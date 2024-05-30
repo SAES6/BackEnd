@@ -62,7 +62,7 @@ class AdminUserController extends Controller
             'username' => 'required',
             'id' => 'required',
         ]);
-        if(auth()->user()->id){
+        if(auth()->user()){
             $adminUser = AdminUser::find($request->id);
             $adminUser->update(['username' => $request->username]);
             return response()->json($adminUser, 200);
@@ -78,7 +78,7 @@ class AdminUserController extends Controller
             'email' => 'required',
             'id' => 'required',
         ]);
-        if(auth()->user()->id){
+        if(auth()->user()){
             $adminUser = AdminUser::find($request->id);
             $adminUser->update(['email' => $request->email]);
             return response()->json($adminUser, 200);
@@ -94,7 +94,7 @@ class AdminUserController extends Controller
             'password' => 'required',
             'id' => 'required',
         ]);
-        if(auth()->user()->id){
+        if(auth()->user()){
             $adminUser = AdminUser::find($request->id);
             $adminUser->update(['password' => bcrypt($request->password)]);
             return response()->json($adminUser, 200);
@@ -111,7 +111,7 @@ class AdminUserController extends Controller
             'password' => 'required',
             'username' => 'required|unique:admin_users,username',
         ]);
-        if(auth()->user()->id){
+        if(auth()->user()){
             $adminUser = AdminUser::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
@@ -129,7 +129,7 @@ class AdminUserController extends Controller
         $request->validate([
             'id' => 'required',
         ]);
-        if(auth()->user()->id){
+        if(auth()->user()){
             $adminUser = AdminUser::find($request->id);
             $adminUser->delete();
             if($adminUser->id == auth()->user()->id){
@@ -163,7 +163,15 @@ class AdminUserController extends Controller
             return response()->json(['error' => 'Could not create token'], 500);
         }
 
-        return response()->json(compact('token'));
+        // Je veux que ça renvoie le mail lié au token
+        $user = Auth::user();
+        $token = JWTAuth::fromUser($user);
+
+        // renvoie le token et l'utilisateur
+        return response()->json(([ 'token' => $token, 'user' => $user]));
+
+
+
     }
 
     public function me()
