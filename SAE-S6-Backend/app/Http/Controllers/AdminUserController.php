@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use ReturnTypeWillChange;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class AdminUserController extends Controller
 {
@@ -147,12 +149,8 @@ class AdminUserController extends Controller
 
         return response()->json(null, 204);
     }
-    
-
-    public function exportData(Request $request) {
-       return response()->json(Response::all());
-    }
-
+  
+  
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -178,7 +176,7 @@ class AdminUserController extends Controller
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
-public function getAdminDetails(Request $request)
+    public function getAdminDetails(Request $request)
 {
     try {
         $user = JWTAuth::parseToken()->authenticate();
@@ -226,5 +224,41 @@ public function getAdminDetails(Request $request)
 
 
 
-
+    public function exportData(Request $request) {
+            // Récupérer toutes les instances de Response avec les relations 'question' et 'choice'
+            $responses = Response::with(['question', 'choice'])->get();
+    
+            // Définir le nom du fichier CSV
+            $filename = 'responses.csv';
+    
+            // Créer une réponse en flux (streamed response)
+            $response = new StreamedResponse(function() use ($responses) {
+                // Ouvrir le flux en écriture
+                $handle = fopen('php://output', 'w');
+    
+                // Ajouter l'en-tête du fichier CSV
+                fputcsv($handle, ['Response ID', 'Question Libelle', 'Question Description',  'Choice Value', 'Response Content', 'Created At'], ";");
+    
+                // Ajouter les données des réponses
+                foreach ($responses as $response) {
+                    fputcsv($handle, [
+                        $response->id,
+                        $response->question->title ?? '', // Accès au libelle de la question
+                        $response->question->description ?? '', // Accès au libelle de la question
+                        $response->choice->text ?? '', // Accès à la valeur du choix
+                        $response->response_text,
+                        $response->created_at,
+                    ], ";");
+                }
+    
+                // Fermer le flux
+                fclose($handle);
+            });
+    
+            // Définir les en-têtes HTTP pour forcer le téléchargement
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    
+            return $response;
+        }
 }
