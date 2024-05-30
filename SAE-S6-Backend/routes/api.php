@@ -15,6 +15,11 @@ Route::apiResource('admin-users', AdminUserController::class);
 
 Route::apiResource('questionnaires', QuestionnaireController::class);
 
+
+Route::get('questionnaires/loadWithSections', [QuestionnaireController::class, 'loadQuestionnairesAndSections']);
+
+Route::get('questions/loadBySection', [QuestionController::class, 'loadQestionsBySection']);
+
 // export des data 
 
 Route::get('admin/exportData', [AdminUserController::class,'exportData']);
