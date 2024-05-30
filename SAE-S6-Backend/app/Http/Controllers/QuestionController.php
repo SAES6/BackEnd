@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -20,7 +21,7 @@ class QuestionController extends Controller
             'questionnaire_id' => 'required|exists:questionnaires,id',
             'title' => 'required',
             'type' => 'required|in:multiple_choice,single_choice,text,slider',
-            'page' => 'required|integer',
+            'section_id' => 'required|integer',
             'order' => 'required|integer',
         ]);
 
@@ -39,7 +40,7 @@ class QuestionController extends Controller
         $request->validate([
             'title' => 'required',
             'type' => 'required|in:multiple_choice,single_choice,text,slider',
-            'page' => 'required|integer',
+            'section_id' => 'required|integer',
             'order' => 'required|integer',
         ]);
 
@@ -53,5 +54,18 @@ class QuestionController extends Controller
         $question->delete();
 
         return response()->json(null, 204);
+    }
+
+
+    public function loadQestionsBySection(Request $request)
+    {
+        if(auth()->user()->id){
+            $section_id = $request->section_id;
+            $questions = Question::where('section_id', $section_id)->with('choices')->get();
+            return response()->json($questions, 200);
+        }
+        else{
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
     }
 }

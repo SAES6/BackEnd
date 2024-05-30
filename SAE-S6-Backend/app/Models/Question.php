@@ -11,7 +11,7 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
-        'questionnaire_id', 'title', 'description', 'img_src', 'type', 'slider_min', 'slider_max', 'page', 'order', 'slider_gap'
+        'questionnaire_id', 'title', 'description', 'img_src', 'type', 'slider_min', 'slider_max', 'section_id', 'order', 'slider_gap'
     ];
 
     public function questionnaire()
@@ -28,4 +28,9 @@ class Question extends Model
     {
         return $this->hasMany(Response::class);
     }
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
+    }
 }
+

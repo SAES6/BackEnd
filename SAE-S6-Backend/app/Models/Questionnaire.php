@@ -22,4 +22,9 @@ class Questionnaire extends Model
     {
         return $this->hasMany(Question::class)->with('choices');
     }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
 }

@@ -45,7 +45,7 @@ class QuestionnaireController extends Controller
 
     public function loadById(Request $request)
     {
-        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->get();
+        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->with('section')->get();
         return response()->json($questions, 200);
     }
 
@@ -93,4 +93,17 @@ class QuestionnaireController extends Controller
         }
         return response()->json($questionnaire, 200);
     }
+
+    public function loadQuestionnairesAndSections()
+    {
+        if(auth()->user()->id){
+            $questionnaires = Questionnaire::with('sections')->get();
+            return response()->json($questionnaires, 200);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+
 }
