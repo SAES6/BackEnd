@@ -98,6 +98,12 @@ class QuestionnaireController extends Controller
     {
         if(auth()->user()){
             $questionnaires = Questionnaire::with('sections')->get();
+            // Je veux trier les sections par leur attribut order dans chaque questionnaire et dans l'order croissant
+            foreach ($questionnaires as $questionnaire) {
+                $sections = $questionnaire->sections;
+                $sections = $sections->sortBy('order');
+                $questionnaire['sections'] = $sections;
+            }
             return response()->json($questionnaires, 200);
         }
         else{
