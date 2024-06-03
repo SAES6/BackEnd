@@ -483,8 +483,8 @@ class AdminUserController extends Controller
                     ->where('responses.choice_id', $userResponses[$i]->choice_id)
                     ->count() - $journalistResponses ;
 
-                    $result['stats']['journalists'][$userResponses[$i]->choice_id] = round($journalistResponses/$totalJournalists, 2) *100;
-                    $result['stats']['others'][$userResponses[$i]->choice_id] = round($otherResponses/$totalOthers,2) * 100;
+                    $result['stats']['journalists'][$userResponses[$i]->choice_id] = array($journalistResponses,round($journalistResponses/$totalJournalists, 2) *100);
+                    $result['stats']['others'][$userResponses[$i]->choice_id] = array($otherResponses,round($otherResponses/$totalOthers,2) * 100);
                 }
             }
             $statsQuestions[] = $result;
