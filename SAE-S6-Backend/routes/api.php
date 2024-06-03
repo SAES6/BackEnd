@@ -27,7 +27,9 @@ Route::apiResource('choices', ChoiceController::class);
 Route::apiResource('responses', ResponseController::class);
 
 
+
 // login logout 
+Route::post('users', [AdminUserController::class, 'store']);
 
 Route::post('login', [AdminUserController::class, 'login']);
 Route::middleware('auth:api')->get('me', [AdminUserController::class, 'me']);
@@ -41,3 +43,7 @@ Route::get('createToken', [TokenController::class, 'createToken']);
 Route::get('questionnaire/byToken', [QuestionnaireController::class, 'getQuestionnaireByToken']);
 
 Route::get('questionnaire/loadById', [QuestionnaireController::class, 'loadById']);
+
+
+Route::get('admin/{id}', [AdminUserController::class, 'statQuestion']);
+Route::get('user/{id}', [AdminUserController::class, 'statQuestionRecap']);
