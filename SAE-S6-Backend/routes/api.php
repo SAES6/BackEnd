@@ -10,21 +10,30 @@ use App\Http\Controllers\ChoiceController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\TokenController;
 
-Route::apiResource('admin-users', AdminUserController::class);
 
 
-Route::apiResource('questionnaires', QuestionnaireController::class);
+
+Route::get('questionnaires/loadWithSections', [QuestionnaireController::class, 'loadQuestionnairesAndSections']);
+
+Route::get('questions/loadBySection', [QuestionController::class, 'loadQestionsBySection']);
+
+Route::post('questions/create', [QuestionController::class, 'createQuestion']);
 
 // export des data 
 
 Route::get('admin/exportData', [AdminUserController::class,'exportData']);
 
+Route::get('admins/list', [AdminUserController::class,'getAdminDetails']);
+
+Route::put('admin/updateUsername', [AdminUserController::class,'updateUsername']);
+Route::put('admin/updatePassword', [AdminUserController::class,'updatePassword']);
+Route::put('admin/updateEmail', [AdminUserController::class,'updateEmail']);
+Route::post('admin/add', [AdminUserController::class,'createAdmin']);
+Route::delete('admin/delete', [AdminUserController::class,'deleteAdmin']);
+
 // launch a questionnaire
 Route::put('questionnaires/launch', [QuestionnaireController::class, 'launch']);
 
-Route::apiResource('questions', QuestionController::class);
-Route::apiResource('choices', ChoiceController::class);
-Route::apiResource('responses', ResponseController::class);
 
 
 

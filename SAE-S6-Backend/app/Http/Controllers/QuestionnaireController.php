@@ -45,7 +45,7 @@ class QuestionnaireController extends Controller
 
     public function loadById(Request $request)
     {
-        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->get();
+        $questions = Question::where('questionnaire_id', $request->id)->with('choices')->with('section')->get();
         return response()->json($questions, 200);
     }
 
@@ -93,4 +93,23 @@ class QuestionnaireController extends Controller
         }
         return response()->json($questionnaire, 200);
     }
+
+    public function loadQuestionnairesAndSections(Request $request)
+    {
+        if(auth()->user()){
+            $questionnaires = Questionnaire::with('sections')->get();
+            // Je veux trier les sections par leur attribut order dans chaque questionnaire et dans l'order croissant
+            foreach ($questionnaires as $questionnaire) {
+                $sections = $questionnaire->sections;
+                $sections = $sections->sortBy('order');
+                $questionnaire['sections'] = $sections;
+            }
+            return response()->json($questionnaires, 200);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+
 }
