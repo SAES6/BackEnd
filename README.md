@@ -19,7 +19,6 @@ Une fois sur votre phpMyAdmin, connectez-vous avec root et "my-secret-pw" et cr√
 Changez le fichier .env du backend comme ceci :
 
 ```bash
-
 APP_NAME=SAE-S6-Backend
 APP_ENV=local
 APP_KEY=base64:ngzf8RyEp57ZXA+stFyqWratpRXjlHckhHliHi9M0Ew=
@@ -92,5 +91,12 @@ VITE_REVERB_PORT="${REVERB_PORT}"
 VITE_REVERB_SCHEME="${REVERB_SCHEME}"
 
 JWT_SECRET=AOokLzuYvSELVI8rip16uiLkrTD3JGb75sXL1qW2QJkb68C17DdeBQUUaQJTTbPM
+
+
+
+FIREBASE_CREDENTIALS=storage/app/firebase_credentials.json
+FIREBASE_DATABASE_URL=gs://informare-valorem.appspot.com
+
+
 
 ```
