@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ResponseController extends Controller
 {
@@ -13,19 +14,61 @@ class ResponseController extends Controller
         return Response::all();
     }
 
-    public function store(Request $request)
+   public function store($userToken, $role = "", Request $request)
     {
-        $request->validate([
-            'question_id' => 'required|exists:questions,id',
-            'response_text' => 'nullable|string',
-            'choice_id' => 'nullable|exists:choices,id',
-            'slider_value' => 'nullable|integer',
-            'role' => 'required|string',
-        ]);
+        // Récupérer le body JSON et le décoder en tableau associatif
+        $reponsesUser = $request->input('responses');
+        
+        // Initialiser un tableau pour stocker les réponses créées
+        $responses = [];
 
-        $response = Response::create($request->all());
-
-        return response()->json($response, 201);
+        foreach ($reponsesUser as &$reponseUser) {
+            // Ajouter les valeurs de role et user_token à chaque réponse
+            $reponseUser['question_id'] = $reponseUser['questionId'];
+            $reponseUser['role'] = $role;
+            $reponseUser['user_token'] = $userToken;
+            $reponseUser['choice_id'] = null;
+            $reponseUser['response_text'] = null;
+            
+            if($reponseUser['questionType'] == "multiple_choice") {
+                foreach ($reponseUser['value'] as $value) {
+                    $responsesSauvegarde= $reponseUser;
+                    $responsesSauvegarde['choice_id'] = $value;
+                    $validatedData = Validator::make($responsesSauvegarde, [
+                        'question_id' => 'required|exists:questions,id',
+                        'response_text' => 'nullable|string',
+                        'choice_id' => 'nullable|exists:choices,id',
+                        'slider_value' => 'nullable|integer',
+                        'role' => 'nullable|string',
+                        'user_token' => 'nullable|string'
+                    ])->validate();
+                    $response = Response::create($validatedData);
+                    $responses[] = $response;
+                }        
+            }
+            else {
+                if($reponseUser['questionType'] == "slider") {
+                    $reponseUser['slider_value'] = $reponseUser['value'];
+                }
+                else if($reponseUser['questionType'] == "text") {
+                    $reponseUser['response_text'] = $reponseUser['value'];
+                }
+                else if($reponseUser['questionType'] == "single_choice") {
+                    $reponseUser['choice_id'] = $reponseUser['value'];
+                }
+                $validatedData = Validator::make($reponseUser, [
+                    'question_id' => 'required|exists:questions,id',
+                    'response_text' => 'nullable|string',
+                    'choice_id' => 'nullable|exists:choices,id',
+                    'slider_value' => 'nullable|integer',
+                    'role' => 'nullable|string',
+                    'user_token' => 'nullable|string'
+                ])->validate();
+                $response = Response::create($validatedData);
+                $responses[] = $response;
+            }
+        }
+        return response()->json(['message' => 'Responses received successfully', 'responses' => $responses], 201);
     }
 
     public function show(Response $response)

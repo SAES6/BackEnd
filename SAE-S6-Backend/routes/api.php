@@ -55,4 +55,5 @@ Route::get('questionnaire/loadById', [QuestionnaireController::class, 'loadById'
 
 
 Route::get('admin/{id}', [AdminUserController::class, 'statQuestion']);
-Route::get('user/{id}', [AdminUserController::class, 'statQuestionRecap']);
+Route::get('user/{id}/{userToken}', [AdminUserController::class, 'statQuestionRecap']);
+Route::post('/response/{userToken}/{role}', [ResponseController::class, 'store']);
