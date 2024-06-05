@@ -19,12 +19,12 @@ class ImageController extends Controller
         ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
         ->withDatabaseUri(env("FIREBASE_DATABASE_URL"));
 
+
         $this->storage = $firebase->createStorage();
     }
 
     public function uploadImage($file)
     {
-        try {
             // Vérifier si le fichier est valide
             if (!$file->isValid()) {
                 throw new \Exception("Le fichier n'est pas valide.");
@@ -44,25 +44,23 @@ class ImageController extends Controller
             );
 
             // Get the URL of the uploaded file
-            $url = $object->signedUrl(new \DateTime('tomorrow'));
+            $url = $object->signedUrl(new \DateTime('+20 minutes'));
+        // Get the URL of the uploaded file (temporary signed URL)
+        $url = $object->signedUrl(new \DateTime('+20 minutes'));
 
-            return $url;
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+        return $filePath;
+
     }
 
 
 
     public function generateSignedUrl($url)
     {
-        $urlComponents = parse_url($url);
-        $objectPath = ltrim($urlComponents['path'], '/');
-
+        $path = $url;
+        
         $bucket = $this->storage->getBucket();
-        $object = $bucket->object($objectPath);
+        $object = $bucket->object($path);
 
-        // Generate a new signed URL
         $signedUrl = $object->signedUrl(new \DateTime('+20 minutes'));
         return $signedUrl;
     }

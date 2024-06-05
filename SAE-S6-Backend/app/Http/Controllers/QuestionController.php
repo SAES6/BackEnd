@@ -190,6 +190,9 @@ class QuestionController extends Controller
             $questions = Question::where('section_id', $section_id)->with('choices')->with('section')->get();
             foreach ($questions as $question) {
                 $question->section_order = $question->section->order;
+                foreach ($question->choices as $choice) {
+                    if($choice->image_src != null) $choice->img_src = (new ImageController)->generateSignedUrl($choice->img_src);
+                }
                 if($question->img_src != null) $question->img_src = (new ImageController)->generateSignedUrl($question->img_src);
 
                 if($question->type == 'slider'){
