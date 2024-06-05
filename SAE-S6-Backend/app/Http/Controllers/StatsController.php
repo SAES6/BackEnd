@@ -304,12 +304,12 @@ class StatsController extends Controller
                     $result['stats']['journalists'][] = [
                         // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => $journalistResponses
+                        'total' => round($journalistResponses / $totalJournalists,2)*100
                     ];
                     $result['stats']['others'][] = [
                         // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => $otherResponses
+                        'total' => round($otherResponses / $totalOthers,2)*100
                     ];
 
                     
