@@ -61,5 +61,6 @@ Route::post('/response/{userToken}/{role}', [ResponseController::class, 'store']
 
 Route::get('stats/loadQuestions', [StatsController::class, 'statQuestion']);
 Route::get('stat/users' , [StatsController::class, 'statUsers']);
+Route::get('stat/byUser' , [StatsController::class, 'loadResponseForOneUser']);
 Route::get('users/{id}/{userToken}' , [StatsController::class, 'statQuestionRecap']);
 
