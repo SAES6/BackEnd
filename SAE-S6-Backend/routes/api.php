@@ -18,7 +18,7 @@ Route::get('questionnaires/loadWithSections', [QuestionnaireController::class, '
 
 Route::get('questions/loadBySection', [QuestionController::class, 'loadQestionsBySection']);
 
-Route::post('questions/create', [QuestionController::class, 'createQuestion']);
+Route::post('questions/save', [QuestionController::class, 'saveSection']);
 
 // export des data 
 
