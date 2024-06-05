@@ -237,6 +237,8 @@ class StatsController extends Controller
         ->distinct('user_token')
         ->count() - $totalJournalists;
             
+        $totalJournalists = $totalJournalists == 0 ? 1: $totalJournalists;               
+        $totalOthers = $totalOthers == 0 ? 1: $totalOthers;
         $resultArray = array();
 
         // Initialiser le résultat avec le total des réponses
@@ -301,6 +303,8 @@ class StatsController extends Controller
                     ->where('responses.choice_id', $userResponses[$i]->choice_id)
                     ->count() - $journalistResponses ;
                     // $choiceText = $userResponses[$i]->choice->text;
+                  
+
                     $result['stats']['journalists'][] = [
                         // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
