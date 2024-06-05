@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\AdminUser;
+use App\Models\Choice;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\Response;
@@ -19,6 +20,59 @@ use ModelNotFoundException;
 
 class StatsController extends Controller
 {
+
+
+    public function loadResponseForOneUser(Request $request) {
+
+        $questionnaireId = $request->query('id');
+        $userToken = $request->query('user_token');
+        $sectionId = $request->query('section_id');
+
+        $questions = Question::where('questionnaire_id', $questionnaireId)->where('section_id', $sectionId)->get();
+        if ($questions->isEmpty()) {
+            return response()->json(['error' => 'No questions found'], 404);
+        }
+        else{
+            $answers = array();
+            foreach ($questions as $question) {
+                if($question->type == 'multiple_choice' || $question->type == 'single_choice'){
+                    $response = Response::where('question_id', $question->id)->where('user_token', $userToken)->get();
+                    $choices = array();
+                    foreach($response as $r){
+                        if($r != null)
+                        $choices[] = $r->choice_id;
+                    }
+                    $answers[] = [
+                        'question_id' => $question->id,
+                        'answer' => $choices
+                    ];
+                }
+                else if( $question->type == 'slider'){
+                    $response = Response::where('question_id', $question->id)->where('user_token', $userToken)->first();
+                    if($response != null)
+                    $answers[] = [
+                        'question_id' => $question->id,
+                        'answer' => $response->slider_value
+                    ];
+                }
+                else{
+                    $response = Response::where('question_id', $question->id)->where('user_token', $userToken)->first();
+                    if($response != null)
+                    $answers[] = [
+                        'question_id' => $question->id,
+                        'answer' => $response->response_text
+                    ];
+                }
+                
+            }
+            return response()->json($answers, 200);
+
+        }
+
+
+        
+        return response()->json($responses, 200);
+    }
     public function statUsers(Request $request){
         $questions = Question::where('questionnaire_id', $request->id)->where('section_id', $request->section_id)->get();
         if ($questions->isEmpty()) {
@@ -48,44 +102,43 @@ class StatsController extends Controller
         }
         return response()->json($finalUsers, 200);
     }
-
     public function exportData(Request $request) {
-        // Récupérer toutes les instances de Response avec les relations 'question' et 'choice'
-        $responses = Response::with(['question', 'choice'])->get();
-
-        // Définir le nom du fichier CSV
+        $questionIds = Question::where('questionnaire_id', $request->query('questionnaire_id'))->pluck('id')->toArray();
+        $responses = Response::with(['question', 'choice'])
+            ->whereIn('question_id', $questionIds)
+            ->get();
+        
         $filename = 'responses.csv';
-
-        // Créer une réponse en flux (streamed response)
+    
         $response = new StreamedResponse(function() use ($responses) {
-            // Ouvrir le flux en écriture
             $handle = fopen('php://output', 'w');
-
-            // Ajouter l'en-tête du fichier CSV
-            fputcsv($handle, ['Response ID', 'Question Libelle', 'Question Description',  'Choice Value', 'Response Content', 'Created At'], ";");
-
-            // Ajouter les données des réponses
+    
+            // Ajout d'un BOM UTF-8 pour indiquer l'encodage du fichier
+            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+    
+            fputcsv($handle, ['Response ID', 'Question Libelle', 'Question Image','Question Description', 'Choice Value', 'Response Content', 'Created At'], ";");
+    
             foreach ($responses as $response) {
                 fputcsv($handle, [
                     $response->id,
-                    $response->question->title ?? '', // Accès au libelle de la question
-                    $response->question->description ?? '', // Accès au libelle de la question
-                    $response->choice->text ?? '', // Accès à la valeur du choix
+                    $response->question->title ?? '',
+                    $response->question->img_src ?? '',
+                    $response->question->description ?? '',
+                    $response->choice->text ?? '',
                     $response->response_text,
                     $response->created_at,
                 ], ";");
             }
-
-            // Fermer le flux
+    
             fclose($handle);
         });
-
-        // Définir les en-têtes HTTP pour forcer le téléchargement
-        $response->headers->set('Content-Type', 'text/csv');
+    
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
-
+    
         return $response;
     }
+    
 
     public function statQuestion(Request $request) {
         $questions = DB::table('questions')
@@ -108,7 +161,18 @@ class StatsController extends Controller
         // Initialiser le résultat avec le total des réponses
         $resultArray['statsTypeUser'] = array(array("type" => "journalist", "total" => $totalResponsesJournalist), array("type" => "other", "total" =>  $totalResponses - $totalResponsesJournalist));
         $statsQuestions = array();
+        // trie les questions par l'attribut order
+        $questions = $questions->sortBy('order');
         foreach ($questions as $question) {
+
+            
+            if($question->type == 'multiple_choice' || $question->type== 'single_choice'){
+                $choices = Choice::where('question_id', $question->id)->get();
+                $question->choices = $choices;
+            }
+
+            
+
         
             $result = [
                 'question' => $question,
