@@ -19,47 +19,48 @@ class ImageController extends Controller
         ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
         ->withDatabaseUri(env("FIREBASE_DATABASE_URL"));
 
+
         $this->storage = $firebase->createStorage();
     }
 
-    public function uploadImage(Request $request)
+    public function uploadImage($file)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        $file = $request->file('image');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = 'images/' . $fileName;
+            // Vérifier si le fichier est valide
+            if (!$file->isValid()) {
+                throw new \Exception("Le fichier n'est pas valide.");
+            }
 
-        // Upload file to Firebase Storage
-        $bucket = $this->storage->getBucket();
-        $object = $bucket->upload(
-            file_get_contents($file->getRealPath()),
-            [
-                'name' => $filePath
-            ]
-        );
+            // Générer un nom de fichier unique
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = 'images/' . $fileName;
 
-        // Get the URL of the uploaded file
+            // Upload file to Firebase Storage
+            $bucket = $this->storage->getBucket();
+            $object = $bucket->upload(
+                file_get_contents($file->getRealPath()),
+                [
+                    'name' => $filePath
+                ]
+            );
 
-        $url = $object->signedUrl(new \DateTime('tomorrow'));
+            // Get the URL of the uploaded file
+            $url = $object->signedUrl(new \DateTime('+20 minutes'));
+        // Get the URL of the uploaded file (temporary signed URL)
+        $url = $object->signedUrl(new \DateTime('+20 minutes'));
 
-        $url = $object->signedUrl();
+        return $filePath;
 
-        // Save URL in the database
-        return $url    ;
     }
+
 
 
     public function generateSignedUrl($url)
     {
-        $urlComponents = parse_url($url);
-        $objectPath = ltrim($urlComponents['path'], '/');
-
+        $path = $url;
+        
         $bucket = $this->storage->getBucket();
-        $object = $bucket->object($objectPath);
+        $object = $bucket->object($path);
 
-        // Generate a new signed URL
         $signedUrl = $object->signedUrl(new \DateTime('+20 minutes'));
         return $signedUrl;
     }
