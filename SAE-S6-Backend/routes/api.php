@@ -9,6 +9,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ChoiceController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\StatsController;
 
 
 
@@ -21,7 +22,7 @@ Route::post('questions/create', [QuestionController::class, 'createQuestion']);
 
 // export des data 
 
-Route::get('admin/exportData', [AdminUserController::class,'exportData']);
+Route::get('admin/exportData', [StatsController::class,'exportData']);
 
 Route::get('admins/list', [AdminUserController::class,'getAdminDetails']);
 
@@ -54,6 +55,9 @@ Route::get('questionnaire/byToken', [QuestionnaireController::class, 'getQuestio
 Route::get('questionnaire/loadById', [QuestionnaireController::class, 'loadById']);
 
 
-Route::get('admin/{id}', [AdminUserController::class, 'statQuestion']);
-Route::get('user/{id}/{userToken}', [AdminUserController::class, 'statQuestionRecap']);
+
 Route::post('/response/{userToken}/{role}', [ResponseController::class, 'store']);
+
+
+Route::get('stats/loadQuestions', [StatsController::class, 'statQuestion']);
+Route::get('stat/users' , [StatsController::class, 'statUsers']);
