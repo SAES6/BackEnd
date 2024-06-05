@@ -300,14 +300,14 @@ class StatsController extends Controller
                     $otherResponses = DB::table('responses')
                     ->where('responses.choice_id', $userResponses[$i]->choice_id)
                     ->count() - $journalistResponses ;
-                    $choiceText = $userResponses[$i]->choice->text;
+                    // $choiceText = $userResponses[$i]->choice->text;
                     $result['stats']['journalists'][] = [
-                        'choice' => $choiceText,
+                        // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
                         'total' => $journalistResponses
                     ];
                     $result['stats']['others'][] = [
-                        'choice' => $choiceText,
+                        // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
                         'total' => $otherResponses
                     ];
