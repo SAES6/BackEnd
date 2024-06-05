@@ -288,7 +288,6 @@ class StatsController extends Controller
                 $userResponses = DB::table('responses')
                 ->where('responses.question_id', $question->id)
                 ->where('responses.user_token', $userToken)
-                ->with('choice')
                 ->get();
 
                 for( $i = 0; $i < count($userResponses); $i++ ) {
