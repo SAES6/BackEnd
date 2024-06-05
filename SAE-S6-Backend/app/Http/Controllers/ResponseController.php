@@ -18,7 +18,7 @@ class ResponseController extends Controller
     {
         // Récupérer le body JSON et le décoder en tableau associatif
         $reponsesUser = $request->input('responses');
-        
+
         // Initialiser un tableau pour stocker les réponses créées
         $responses = [];
 
@@ -29,8 +29,8 @@ class ResponseController extends Controller
             $reponseUser['user_token'] = $userToken;
             $reponseUser['choice_id'] = null;
             $reponseUser['response_text'] = null;
-            
-            if($reponseUser['questionType'] == "multiple_choice") {
+
+            if(gettype($reponseUser['value']) == "array") {
                 foreach ($reponseUser['value'] as $value) {
                     $responsesSauvegarde= $reponseUser;
                     $responsesSauvegarde['choice_id'] = $value;
@@ -44,17 +44,14 @@ class ResponseController extends Controller
                     ])->validate();
                     $response = Response::create($validatedData);
                     $responses[] = $response;
-                }        
+                }
             }
             else {
-                if($reponseUser['questionType'] == "slider") {
+                if(gettype($reponseUser['value']) == "integer") {
                     $reponseUser['slider_value'] = $reponseUser['value'];
                 }
-                else if($reponseUser['questionType'] == "text") {
+                else if(gettype($reponseUser['value']) == "string") {
                     $reponseUser['response_text'] = $reponseUser['value'];
-                }
-                else if($reponseUser['questionType'] == "single_choice") {
-                    $reponseUser['choice_id'] = $reponseUser['value'];
                 }
                 $validatedData = Validator::make($reponseUser, [
                     'question_id' => 'required|exists:questions,id',

@@ -301,6 +301,8 @@ class StatsController extends Controller
         ->distinct('user_token')
         ->count() - $totalJournalists;
             
+        $totalJournalists = $totalJournalists == 0 ? 1: $totalJournalists;               
+        $totalOthers = $totalOthers == 0 ? 1: $totalOthers;
         $resultArray = array();
 
         // Initialiser le résultat avec le total des réponses
@@ -352,7 +354,6 @@ class StatsController extends Controller
                 $userResponses = DB::table('responses')
                 ->where('responses.question_id', $question->id)
                 ->where('responses.user_token', $userToken)
-                ->with('choice')
                 ->get();
 
                 for( $i = 0; $i < count($userResponses); $i++ ) {
@@ -365,16 +366,21 @@ class StatsController extends Controller
                     $otherResponses = DB::table('responses')
                     ->where('responses.choice_id', $userResponses[$i]->choice_id)
                     ->count() - $journalistResponses ;
-                    $choiceText = $userResponses[$i]->choice->text;
+                    // $choiceText = $userResponses[$i]->choice->text;
+                  
+
                     $result['stats']['journalists'][] = [
-                        'choice' => $choiceText,
+                        // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => $journalistResponses
+                        'total' => round($journalistResponses / $totalJournalists,2)*100,
+                        'pourcentage' => $journalistResponses
                     ];
                     $result['stats']['others'][] = [
-                        'choice' => $choiceText,
+                        // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => $otherResponses
+                        'total' => round($otherResponses / $totalOthers,2)*100,
+                        'pourcentage' => $otherResponses
+
                     ];
 
                     

@@ -36,7 +36,7 @@ class QuestionnaireController extends Controller
         $questionnaire->update(['deployed' => $request->deployed]);
         return response()->json($questionnaire, 200);
     }
-    
+
     public function show(Questionnaire $questionnaire)
     {
         return $questionnaire->with('questions');
