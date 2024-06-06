@@ -17,6 +17,7 @@ class Section extends Model
     protected $fillable = [
         'name',
         'order',
+        'questionnaire_id',
     ];
 
     /**

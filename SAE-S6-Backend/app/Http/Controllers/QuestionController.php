@@ -41,7 +41,9 @@ class QuestionController extends Controller
                 $questionnaire->description = $questionnaireInfos['description'];
                 $questionnaire->duree = $questionnaireInfos['duree'];
                 $questionnaire->save();
+                $questionnaireId = $questionnaire->id;
             }
+
     
             $section = Section::find($sectionId);
             if ($section == null) {
@@ -56,6 +58,7 @@ class QuestionController extends Controller
                 $section->order = $request->input('order');
                 $section->save();
             }
+            
     
             foreach ($questionsList as $questionIndex => $question) {
                 $imageUrl = null;
@@ -83,7 +86,7 @@ class QuestionController extends Controller
                         'slider_max' => $question['slider_max'] == 'null' ? NULL : $question['slider_max'],
                         'slider_gap' => $question['slider_gap'] == 'null' ? NULL : $question['slider_gap'],
                     ]);
-                    $this->saveChoices($request, $newQuestion, $question['choices']);
+                    $this->saveChoices($request, $newQuestion, $question['choices'], $questionIndex);
                 } else {
                     $isQuestion->update([
                         'section_id' => $section->id,
@@ -191,7 +194,7 @@ class QuestionController extends Controller
             foreach ($questions as $question) {
                 $question->section_order = $question->section->order;
                 foreach ($question->choices as $choice) {
-                    if($choice->image_src != null) $choice->img_src = (new ImageController)->generateSignedUrl($choice->img_src);
+                    if($choice->image_src != null) $choice->image_src = (new ImageController)->generateSignedUrl($choice->image_src);
                 }
                 if($question->img_src != null) $question->img_src = (new ImageController)->generateSignedUrl($question->img_src);
 
