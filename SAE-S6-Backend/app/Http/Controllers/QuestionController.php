@@ -58,6 +58,14 @@ class QuestionController extends Controller
                 $section->order = $request->input('order');
                 $section->save();
             }
+
+
+            $currentQuestions = Question::where('section_id', $section->id)->get();
+            foreach ($currentQuestions as $question) {
+                if(!in_array($question->id, array_column($questionsList, 'id'))){
+                    $question->delete();
+                }
+            }
             
     
             foreach ($questionsList as $questionIndex => $question) {
