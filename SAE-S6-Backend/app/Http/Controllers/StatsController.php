@@ -146,7 +146,7 @@ class StatsController extends Controller
 
 
     public function statQuestion(Request $request) {
-        if(!^isset($request->section_id)){
+        if(!isset($request->section_id)){
             return response()->json([], 200);
         }
         $questions = DB::table('questions')
