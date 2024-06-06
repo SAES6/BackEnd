@@ -8,6 +8,7 @@ use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use App\Models\Response;
 use App\Models\Question;
+use App\Models\Section;
 class QuestionnaireController extends Controller
 {
     public function index()
