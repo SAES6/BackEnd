@@ -46,6 +46,13 @@ class QuestionnaireController extends Controller
     public function loadById(Request $request)
     {
         $questions = Question::where('questionnaire_id', $request->id)->with('choices')->with('section')->get();
+        foreach ($questions as $question) {
+            foreach ($question->choices as $choice) {
+                if($choice->image_src != null) $choice->image_src = (new ImageController)->generateSignedUrl($choice->image_src);
+            }
+            if($question->img_src != null) $question->img_src = (new ImageController)->generateSignedUrl($question->img_src);
+
+        }
         return response()->json($questions, 200);
     }
 
