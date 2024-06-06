@@ -94,7 +94,7 @@ class QuestionController extends Controller
                         'slider_max' => $question['slider_max'] == 'null' ? NULL : $question['slider_max'],
                         'slider_gap' => $question['slider_gap'] == 'null' ? NULL : $question['slider_gap'],
                     ]);
-                    $this->saveChoices($request, $newQuestion, $question['choices'], $questionIndex);
+                    if(isset($question['choices'])) $this->saveChoices($request, $newQuestion, $question['choices'], $questionIndex);
                 } else {
                     $isQuestion->update([
                         'section_id' => $section->id,
@@ -113,7 +113,7 @@ class QuestionController extends Controller
                 }
             }
     
-            return response()->json(['message' => 'success'], 200);
+            return response()->json($section , 200);
         } else {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
