@@ -376,14 +376,14 @@ class StatsController extends Controller
                     $result['stats']['journalists'][] = [
                         // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => round($journalistResponses / $totalJournalists,2)*100,
-                        'pourcentage' => $journalistResponses
+                        'pourcentage' => round($journalistResponses / $totalJournalists,2)*100,
+                        'total' => $journalistResponses
                     ];
                     $result['stats']['others'][] = [
                         // 'choice' => $choiceText,
                         'choice_id' => $userResponses[$i]->choice_id,
-                        'total' => round($otherResponses / $totalOthers,2)*100,
-                        'pourcentage' => $otherResponses
+                        'pourcentage' => round($otherResponses / $totalOthers,2)*100,
+                        'total' => $otherResponses
 
                     ];
 
