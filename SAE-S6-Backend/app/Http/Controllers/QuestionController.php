@@ -37,9 +37,9 @@ class QuestionController extends Controller
                 ]);
                 $questionnaireId = $newQuiz->id;
             } else {
-                $questionnaire->name = $questionnaireInfos['name'];
-                $questionnaire->description = $questionnaireInfos['description'];
-                $questionnaire->duree = $questionnaireInfos['duree'];
+                if(isset($questionnaireInfos['name']) && $questionnaireInfos['name'] != null) $questionnaire->name = $questionnaireInfos['name'];
+                if( isset($questionnaireInfos['description']) && $questionnaireInfos['description'] != null) $questionnaire->description = $questionnaireInfos['description'];
+                if( isset($questionnaireInfos['duree']) && $questionnaireInfos['duree'] != null) $questionnaire->duree = $questionnaireInfos['duree'];
                 $questionnaire->save();
                 $questionnaireId = $questionnaire->id;
             }
