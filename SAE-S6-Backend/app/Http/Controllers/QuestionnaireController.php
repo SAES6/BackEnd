@@ -118,5 +118,63 @@ class QuestionnaireController extends Controller
         }
     }
 
+    public function deleteSection (Request $request)
+    {
+    if(auth()->user()){
+        $section = Section::find($request->id);
+        $order = $section->order;
+        $allSection = Section::where('questionnaire_id', $section->questionnaire_id)->get();
+        foreach ($allSection as $s) {
+            if($s->order > $order){
+                $s->update(['order' => $s->order - 1]);
+            }
+        }
+        $section->delete();
+        return response()->json(null, 204);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function updateSectionName(Request $request)
+    {
+    if(auth()->user()){
+        $section = Section::find($request->id);
+        $section->update(['name' => $request->name]);
+        return response()->json($section, 200);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function deleteQuestionnaire (Request $request)
+    {
+    if(auth()->user()){
+        $questionnaire = Questionnaire::find($request->id);
+        $sections = Section::where('questionnaire_id', $questionnaire->id)->get();
+        foreach ($sections as $section) {
+            $section->delete();
+        }
+        $questionnaire->delete();
+        return response()->json(null, 204);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function updateQuestionnaireName(Request $request)
+    {
+    if(auth()->user()){
+        $questionnaire = Questionnaire::find($request->id);
+        $questionnaire->update(['name' => $request->name]);
+        return response()->json($questionnaire, 200);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
 
 }

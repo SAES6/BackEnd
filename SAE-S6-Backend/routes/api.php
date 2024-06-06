@@ -18,9 +18,16 @@ Route::get('questionnaires/loadWithSections', [QuestionnaireController::class, '
 
 Route::get('questions/loadBySection', [QuestionController::class, 'loadQestionsBySection']);
 
+Route::delete('questionnaire/deleteById', [QuestionnaireController::class, 'deleteQuestionnaire']);
+Route::delete('section/deleteById', [QuestionnaireController::class, 'deleteSection']);
+
+Route::put('questionnaire/updateName', [QuestionnaireController::class, 'updateQuestionnaireName']);
+Route::put('section/updateName', [QuestionnaireController::class, 'updateSectionName']);
+
+
 Route::post('questions/save', [QuestionController::class, 'saveSection']);
 
-// export des data 
+// export des data
 
 Route::get('admin/exportData', [StatsController::class,'exportData']);
 
@@ -38,7 +45,7 @@ Route::put('questionnaires/launch', [QuestionnaireController::class, 'launch']);
 
 
 
-// login logout 
+// login logout
 Route::post('users', [AdminUserController::class, 'store']);
 
 Route::post('login', [AdminUserController::class, 'login']);
