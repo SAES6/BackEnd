@@ -75,6 +75,9 @@ class StatsController extends Controller
         return response()->json($responses, 200);
     }
     public function statUsers(Request $request){
+        if(isset($request->section_id)){
+            return response()->json([], 200);
+        }
         $questions = Question::where('questionnaire_id', $request->id)->where('section_id', $request->section_id)->get();
         if ($questions->isEmpty()) {
             return response()->json(['error' => 'No questions found'], 404);
@@ -141,7 +144,11 @@ class StatsController extends Controller
     }
     
 
+
     public function statQuestion(Request $request) {
+        if(isset($request->section_id)){
+            return response()->json([], 200);
+        }
         $questions = DB::table('questions')
             ->where('questions.questionnaire_id', $request->id)
             ->where('questions.section_id', $request->section_id)

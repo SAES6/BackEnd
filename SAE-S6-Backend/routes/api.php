@@ -24,6 +24,8 @@ Route::delete('section/deleteById', [QuestionnaireController::class, 'deleteSect
 Route::put('questionnaire/updateName', [QuestionnaireController::class, 'updateQuestionnaireName']);
 Route::put('section/updateName', [QuestionnaireController::class, 'updateSectionName']);
 
+Route::put('questionnaire/deployOrStop', [QuestionnaireController::class, 'deployOrStopQuestionnaire']);
+
 
 Route::post('questions/save', [QuestionController::class, 'saveSection']);
 
@@ -39,8 +41,6 @@ Route::put('admin/updateEmail', [AdminUserController::class,'updateEmail']);
 Route::post('admin/add', [AdminUserController::class,'createAdmin']);
 Route::delete('admin/delete', [AdminUserController::class,'deleteAdmin']);
 
-// launch a questionnaire
-Route::put('questionnaires/launch', [QuestionnaireController::class, 'launch']);
 
 
 

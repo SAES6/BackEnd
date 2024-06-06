@@ -77,7 +77,7 @@ class QuestionnaireController extends Controller
 
     public function getQuestionnaireByToken(Request $request)
     {
-        $questionnaire = Questionnaire::all();
+        $questionnaire = Questionnaire::where('deployed', 1)->get();
         $token = $request->token;
         foreach ($questionnaire as $q) {
 
@@ -172,6 +172,26 @@ class QuestionnaireController extends Controller
         $questionnaire = Questionnaire::find($request->id);
         $questionnaire->update(['name' => $request->name]);
         return response()->json($questionnaire, 200);
+        }
+        else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+
+    public function deployOrStopQuestionnaire(Request $request)
+    {
+    if(auth()->user()){
+        $questionnaire = Questionnaire::find($request->id);
+        if($questionnaire->deployed == 0){
+            $questionnaire->update(['deployed' => 1]);
+            return response()->json("deployed", 200);
+        }
+        else{
+            $questionnaire->update(['deployed' => 0]);
+            return response()->json("stopped", 200);
+        }
+        
         }
         else{
             return response()->json(['error' => 'Unauthorized'], 401);
