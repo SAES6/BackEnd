@@ -75,7 +75,7 @@ class StatsController extends Controller
         return response()->json($responses, 200);
     }
     public function statUsers(Request $request){
-        if(isset($request->section_id)){
+        if(!isset($request->section_id)){
             return response()->json([], 200);
         }
         $questions = Question::where('questionnaire_id', $request->id)->where('section_id', $request->section_id)->get();
@@ -146,7 +146,7 @@ class StatsController extends Controller
 
 
     public function statQuestion(Request $request) {
-        if(isset($request->section_id)){
+        if(!^isset($request->section_id)){
             return response()->json([], 200);
         }
         $questions = DB::table('questions')
