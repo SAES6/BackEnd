@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\DB;
 use ModelNotFoundException;
 
+
 class StatsController extends Controller
 {
 
@@ -164,11 +165,14 @@ class StatsController extends Controller
         // trie les questions par l'attribut order
         $questions = $questions->sortBy('order');
         foreach ($questions as $question) {
-
+            if($question->img_src != null) $question->img_src = (new ImageController)->generateSignedUrl($question->img_src);
             
             if($question->type == 'multiple_choice' || $question->type== 'single_choice'){
                 $choices = Choice::where('question_id', $question->id)->get();
                 $question->choices = $choices;
+                foreach ($question->choices as $choice) {
+                    if($choice->image_src != null) $choice->image_src = (new ImageController)->generateSignedUrl($choice->image_src);
+                }
             }
 
             
