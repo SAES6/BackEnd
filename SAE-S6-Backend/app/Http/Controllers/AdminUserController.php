@@ -27,12 +27,6 @@ class AdminUserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|unique:admin_users,email',
-            'password' => 'required',
-            'username' => 'required|unique:admin_users,username',
-        ]);
-
         $adminUser = AdminUser::create([
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -109,11 +103,6 @@ class AdminUserController extends Controller
 
     public function createAdmin(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|unique:admin_users,email',
-            'password' => 'required',
-            'username' => 'required|unique:admin_users,username',
-        ]);
         if(auth()->user()){
             $adminUser = AdminUser::create([
                 'email' => $request->email,
