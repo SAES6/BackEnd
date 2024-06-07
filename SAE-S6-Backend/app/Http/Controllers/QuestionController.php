@@ -80,7 +80,7 @@ class QuestionController extends Controller
                 }
     
                 $newType = $this->mapQuestionType($question['type']);
-                $isQuestion = Question::find($question['id']);
+                $isQuestion = Question::where('id', $question['id'])->where('section_id', $section->id)->first();
                 if ($isQuestion == null) {
                     $newQuestion = Question::create([
                         'section_id' => $section->id,

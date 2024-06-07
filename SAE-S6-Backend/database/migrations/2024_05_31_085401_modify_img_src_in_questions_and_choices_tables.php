@@ -14,11 +14,11 @@ class ModifyImgSrcInQuestionsAndChoicesTables extends Migration
     public function up()
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->string('img_src', 1000)->change()->nullable();
+            $table->string('img_src', 10000)->change()->nullable();
         });
 
         Schema::table('choices', function (Blueprint $table) {
-            $table->string('image_src', 1000)->change()->nullable();
+            $table->string('image_src', 10000)->change()->nullable();
         });
     }
 
