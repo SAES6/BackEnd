@@ -153,6 +153,9 @@ class StatsController extends Controller
             ->where('questions.questionnaire_id', $request->id)
             ->where('questions.section_id', $request->section_id)
             ->get();
+        if ($questions->isEmpty()) {
+            return response()->json([], 200);
+        }
             
         $resultArray = array();
         $totalResponses = DB::table('responses')
